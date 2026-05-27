@@ -82,7 +82,7 @@ export default function App() {
           </div>
 
           <div className="card leaderboard">
-            <h2>Lider lövhəsi</h2>
+            <h2>Peyser lövhəsi</h2>
 
             {leader && (
               <div className="leader">
