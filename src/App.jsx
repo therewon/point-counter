@@ -5,9 +5,9 @@ export default function App() {
   const [playerName, setPlayerName] = useState("");
   const [players, setPlayers] = useState([
     { id: 1, name: "The Rewon", score: 0 },
-    { id: 2, name: "Rejiii", score: 0 },
-    { id: 2, name: "Tahirov Rashad", score: 0 },
-    { id: 2, name: "Revii", score: 0 },
+    { id: 2, name: "Ramin", score: 0 },
+    { id: 2, name: "Orxan", score: 0 },
+    { id: 2, name: "Yusif", score: 0 },
   ]);
   const [scoreInput, setScoreInput] = useState({});
 
