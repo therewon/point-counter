@@ -1,12 +1,32 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "./App.css";
 
 export default function App() {
   const [playerName, setPlayerName] = useState("");
-  const [players, setPlayers] = useState([
-    { id: 1, name: "The Rewon", score: 0 },
-  ]);
-  const [scoreInput, setScoreInput] = useState({});
+
+  // LocalStorage-dan oxu
+  const [players, setPlayers] = useState(() => {
+    const savedPlayers = localStorage.getItem("players");
+
+    return savedPlayers
+      ? JSON.parse(savedPlayers)
+      : [{ id: 1, name: "The Rewon", score: 0 }];
+  });
+
+  const [scoreInput, setScoreInput] = useState(() => {
+    const savedScoreInput = localStorage.getItem("scoreInput");
+    return savedScoreInput ? JSON.parse(savedScoreInput) : {};
+  });
+
+  // Players dəyişəndə yadda saxla
+  useEffect(() => {
+    localStorage.setItem("players", JSON.stringify(players));
+  }, [players]);
+
+  // Score input dəyişəndə yadda saxla
+  useEffect(() => {
+    localStorage.setItem("scoreInput", JSON.stringify(scoreInput));
+  }, [scoreInput]);
 
   const addPlayer = () => {
     const trimmed = playerName.trim();
@@ -15,6 +35,7 @@ export default function App() {
     const exists = players.some(
       (player) => player.name.toLowerCase() === trimmed.toLowerCase()
     );
+
     if (exists) return;
 
     setPlayers((prev) => [
@@ -25,23 +46,37 @@ export default function App() {
         score: 0,
       },
     ]);
+
     setPlayerName("");
   };
 
   const removePlayer = (id) => {
     setPlayers((prev) => prev.filter((player) => player.id !== id));
+
+    setScoreInput((prev) => {
+      const updated = { ...prev };
+      delete updated[id];
+      return updated;
+    });
   };
 
   const updateScore = (id, amount) => {
     setPlayers((prev) =>
       prev.map((player) =>
-        player.id === id ? { ...player, score: player.score + amount } : player
+        player.id === id
+          ? { ...player, score: player.score + amount }
+          : player
       )
     );
   };
 
   const resetScores = () => {
-    setPlayers((prev) => prev.map((player) => ({ ...player, score: 0 })));
+    setPlayers((prev) =>
+      prev.map((player) => ({
+        ...player,
+        score: 0,
+      }))
+    );
   };
 
   const sortedPlayers = useMemo(() => {
@@ -58,6 +93,7 @@ export default function App() {
             <h1>Point Counter</h1>
             <p>İstifadəçiləri əlavə et, xalları idarə et və lideri gör.</p>
           </div>
+
           <button className="reset-btn" onClick={resetScores}>
             Xalları sıfırla
           </button>
@@ -66,6 +102,7 @@ export default function App() {
         <div className="grid">
           <div className="card">
             <h2>İstifadəçi əlavə et</h2>
+
             <div className="add-box">
               <input
                 type="text"
@@ -74,6 +111,7 @@ export default function App() {
                 onChange={(e) => setPlayerName(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && addPlayer()}
               />
+
               <button onClick={addPlayer}>Əlavə et</button>
             </div>
           </div>
@@ -84,6 +122,7 @@ export default function App() {
             {leader && (
               <div className="leader">
                 <p>Hazırkı lider</p>
+
                 <div className="leader-row">
                   <h3>{leader.name}</h3>
                   <span>{leader.score} xal</span>
@@ -93,7 +132,9 @@ export default function App() {
 
             <div className="players">
               {sortedPlayers.length === 0 ? (
-                <div className="empty">Hələ istifadəçi əlavə edilməyib.</div>
+                <div className="empty">
+                  Hələ istifadəçi əlavə edilməyib.
+                </div>
               ) : (
                 sortedPlayers.map((player, index) => (
                   <div className="player-card" key={player.id}>
@@ -102,14 +143,27 @@ export default function App() {
                     <div className="player-info">
                       <div className="name-row">
                         <h3>{player.name}</h3>
-                        <span className="score-badge">{player.score} xal</span>
+                        <span className="score-badge">
+                          {player.score} xal
+                        </span>
                       </div>
 
                       <div className="action-buttons">
-                        <button onClick={() => updateScore(player.id, 1)}>+1</button>
-                        <button onClick={() => updateScore(player.id, 5)}>+5</button>
-                        <button onClick={() => updateScore(player.id, 10)}>+10</button>
-                        <button onClick={() => updateScore(player.id, -1)}>-1</button>
+                        <button onClick={() => updateScore(player.id, 1)}>
+                          +1
+                        </button>
+
+                        <button onClick={() => updateScore(player.id, 5)}>
+                          +5
+                        </button>
+
+                        <button onClick={() => updateScore(player.id, 10)}>
+                          +10
+                        </button>
+
+                        <button onClick={() => updateScore(player.id, -1)}>
+                          -1
+                        </button>
                       </div>
                     </div>
 
@@ -125,11 +179,15 @@ export default function App() {
                           }))
                         }
                       />
+
                       <button
                         onClick={() => {
                           const value = Number(scoreInput[player.id] || 0);
+
                           if (!value) return;
+
                           updateScore(player.id, value);
+
                           setScoreInput((prev) => ({
                             ...prev,
                             [player.id]: "",
@@ -138,6 +196,7 @@ export default function App() {
                       >
                         Xal ver
                       </button>
+
                       <button
                         className="delete-btn"
                         onClick={() => removePlayer(player.id)}
