@@ -5,9 +5,6 @@ export default function App() {
   const [playerName, setPlayerName] = useState("");
   const [players, setPlayers] = useState([
     { id: 1, name: "The Rewon", score: 0 },
-    { id: 2, name: "Ramin", score: 0 },
-    { id: 2, name: "Orxan", score: 0 },
-    { id: 2, name: "Yusif", score: 0 },
   ]);
   const [scoreInput, setScoreInput] = useState({});
 
@@ -82,7 +79,7 @@ export default function App() {
           </div>
 
           <div className="card leaderboard">
-            <h2>Peyser lövhəsi</h2>
+            <h2>Lider lövhəsi</h2>
 
             {leader && (
               <div className="leader">
