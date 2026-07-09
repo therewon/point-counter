@@ -8,6 +8,32 @@ export default function App() {
     const savedHistory = localStorage.getItem("history");
     return savedHistory ? JSON.parse(savedHistory) : [];
   });
+  const [now, setNow] = useState(Date.now());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNow(Date.now());
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const getTimeAgo = (time) => {
+    const diff = Math.floor((now - time) / 1000);
+
+    if (diff < 60) return "Just now";
+
+    const minutes = Math.floor(diff / 60);
+    if (minutes < 60)
+      return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24)
+      return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+
+    const days = Math.floor(hours / 24);
+    return `${days} day${days > 1 ? "s" : ""} ago`;
+  };
 
   useEffect(() => {
     localStorage.setItem("history", JSON.stringify(history));
@@ -62,7 +88,13 @@ export default function App() {
       },
     ]);
 
-    setHistory((prev) => [...prev, `${trimmed} əlavə olundu!`]);
+    setHistory((prev) => [
+      ...prev,
+      {
+        text: `${trimmed} əlavə olundu!`,
+        time: Date.now(),
+      },
+    ]);
     toast.success(`${trimmed} əlavə olundu!`);
     setPlayerName("");
   };
@@ -80,9 +112,11 @@ export default function App() {
 
     setHistory((prev) => [
       ...prev,
-      `${player?.name} silindi!`,
+      {
+        text: `${player?.name} silindi!`,
+        time: Date.now(),
+      },
     ]);
-
     toast.info(`${player?.name} silindi.`);
   };
 
@@ -100,12 +134,18 @@ export default function App() {
     if (amount > 0) {
       setHistory((prev) => [
         ...prev,
-        `${player?.name} +${amount} xal qazandı!`,
+        {
+          text: `${player?.name} +${amount} xal qazandı!`,
+          time: Date.now(),
+        },
       ]);
     } else {
       setHistory((prev) => [
         ...prev,
-        `${player?.name} ${Math.abs(amount)} xal itirdi!`,
+        {
+          text: `${player?.name} ${Math.abs(amount)} xal itirdi!`,
+          time: Date.now(),
+        },
       ]);
     }
   };
@@ -318,15 +358,25 @@ export default function App() {
           <h2>History</h2>
 
           {
-            history ? (
+            history.length === 0 ? (
               <div className="history-wrapper-empty">
                 <h4 className="empty-history">Hele ki melumat daxil edilmeyib</h4>
               </div>
             ) : (
               <div className="history-wrapper">
                 {history.map((item, index) => (
-                  <div key={index} className="history-item" style={{ color: (item.includes("əlavə") || item.includes("qazandı")) ? "#22c55e" : "red" }}>
-                    <h4>{index + 1}. {item}</h4>
+                  <div
+                    key={index}
+                    className="history-item"
+                    style={{
+                      color:
+                        item.text.includes("əlavə") || item.text.includes("qazandı")
+                          ? "#22c55e"
+                          : "red",
+                    }}
+                  >
+                    <h4><span style={{color: "black !important" }}>{index + 1}.</span> {item.text}</h4>
+                    <p>{getTimeAgo(item.time)}</p>
                   </div>
                 ))}
               </div>

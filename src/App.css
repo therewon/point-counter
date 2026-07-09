@@ -239,6 +239,17 @@ input {
   opacity: 0.5;
 }
 
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+}
+
+.history-item p {
+  font-size: 14px;
+}
+
 .history-wrapper-empty {
   padding: 10px;
   border-radius: 10px;
