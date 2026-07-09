@@ -232,16 +232,16 @@ export default function App() {
                   onClick={() => setIsOpen(false)}
                 />
 
-                <div className="choose-player-wrapper">
+                <div className="bg-[var(--primary-color)] p-5! fixed w-full sm:max-w-[750px] sm:w-1/2 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[2] rounded-[10px]">
 
-                  <div className="flex justify-between items-center mb-6">
-                    <h1 className="text-xl font-bold">
+                  <div className="flex justify-between items-center  max-sm:p-4!">
+                    <h1 className="sm:text-xl! text-lg! font-bold ">
                       Choose a player who starts the game
                     </h1>
 
                     <button
                       onClick={() => setIsOpen(false)}
-                      className="text-2xl"
+                      className="text-2xl -translate-y-1"
                     >
                       <IoMdClose />
                     </button>
@@ -290,7 +290,7 @@ export default function App() {
                     <motion.h2
                       initial={{ opacity: 0, scale: .5 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className="text-center pt-4! text-3xl font-bold text-green-600"
+                      className="text-center pt-4! max-sm:pb-4! text-3xl font-bold text-green-600"
                     >
                       🎉 {startingPlayer.name} starts the game!
                     </motion.h2>
