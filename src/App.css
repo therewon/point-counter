@@ -46,6 +46,7 @@ body {
 }
 
 .reset-btn,
+.start-player,
 .add-box button,
 .action-buttons button,
 .custom-score button {
@@ -56,6 +57,11 @@ body {
   transition: 0.2s;
 }
 
+.buttons-container {
+  display: flex;
+  gap: 5px;
+}
+
 .reset-btn {
   background: rgb(196, 5, 5);
   color: white;
@@ -63,6 +69,40 @@ body {
 
 .reset-btn:hover {
   background-color: red;
+}
+
+.start-player {
+  background-color: var(--forth-color);
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.start-player:hover {
+  background-color: var(--secondary-color);
+  color: var(--forth-color);
+}
+.choose-player-overlay{
+  position: fixed;
+  background-color: black;
+  opacity: 50%;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+
+.choose-player-wrapper{
+  background: var(--primary-color);
+  padding: 20px;
+  position: fixed;
+  max-width: 750px;
+  width: 50%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+  z-index: 2;
+  border-radius: 10px;
 }
 
 .grid {
@@ -142,8 +182,8 @@ input {
 }
 
 .player-card {
-  display: grid;
-  grid-template-columns: 60px 1fr auto;
+  display: flex;
+  justify-content: space-between;
   gap: 16px;
   align-items: center;
   border: 1px solid #e2e8f0;
@@ -197,7 +237,7 @@ input {
 }
 
 .custom-score button {
-  background: #2563eb;
+  background: var(--primary-color);
   color: white;
 }
 
@@ -214,7 +254,7 @@ input {
 }
 
 .history {
-  background-color: var(--third-color);
+  background-color: var(--secondary-color);
   padding: 20px;
   border-radius: 18px;
 }

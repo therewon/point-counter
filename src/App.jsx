@@ -1,6 +1,9 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import "./App.css";
 import { ToastContainer, toast } from "react-toastify";
+import { IoMdClose } from "react-icons/io";
+import { AnimatePresence, motion } from "framer-motion";
+
 
 export default function App() {
   const [playerName, setPlayerName] = useState("");
@@ -168,6 +171,40 @@ export default function App() {
 
   const leader = sortedPlayers[0];
 
+  const [startingPlayer, setStartingPlayer] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const [isRolling, setIsRolling] = useState(false);
+  const startGame = () => {
+    if (players.length === 0) return;
+
+    setIsOpen(true);
+    setIsRolling(true);
+
+    let count = 0;
+
+    const interval = setInterval(() => {
+      const randomIndex = Math.floor(Math.random() * players.length);
+
+      setActiveIndex(randomIndex);
+
+      count++;
+
+      if (count >= 20) {
+        clearInterval(interval);
+
+        const winner =
+          players[Math.floor(Math.random() * players.length)];
+
+        setStartingPlayer(winner);
+        setActiveIndex(players.findIndex(p => p.id === winner.id));
+
+        toast.success(`${winner.name} oyuna başlayır!`);
+
+        setIsRolling(false);
+      }
+    }, 120);
+  };
   return (
     <div className="app">
       <ToastContainer
@@ -182,9 +219,89 @@ export default function App() {
             <p>İstifadəçiləri əlavə et, xalları idarə et və lideri gör.</p>
           </div>
 
-          <button className="reset-btn" onClick={resetScores}>
-            Reset Game
-          </button>
+          <div className="buttons-container">
+            <button className="start-player" onClick={startGame}>Oyuna başlayanı seç</button>
+            <button className="reset-btn" onClick={resetScores}>
+              Reset Game
+            </button>
+
+            {isOpen && (
+              <>
+                <div
+                  className="choose-player-overlay"
+                  onClick={() => setIsOpen(false)}
+                />
+
+                <div className="choose-player-wrapper">
+
+                  <div className="flex justify-between items-center mb-6">
+                    <h1 className="text-xl font-bold">
+                      Choose a player who starts the game
+                    </h1>
+
+                    <button
+                      onClick={() => setIsOpen(false)}
+                      className="text-2xl"
+                    >
+                      <IoMdClose />
+                    </button>
+                  </div>
+
+                  <div className="flex flex-col gap-3">
+
+                    {players.map((player, index) => (
+                      <motion.div
+                        key={player.id}
+                        animate={{
+                          // scale: activeIndex === index ? 1.5 : 1,
+                          rotate:
+                            activeIndex === index ? [-3, 3, -3, 0] : 0,
+                          height: activeIndex === index ? "50px" : "40px"
+                        }}
+                        transition={{
+                          duration: 0.15,
+                        }}
+                        className={`
+                                rounded-xl
+                                border-2
+                                p-10
+                                text-center
+                                transition-all
+                                flex
+                                flex-col
+                                items-center
+                                justify-center
+
+                                ${activeIndex === index
+                            ? "border-green-500 bg-green-500 shadow-xl"
+                            : "border-gray-300"
+                          }
+        `}
+                      >
+                        <h2 className="text-lg font-bold">
+                          {player.name}
+                        </h2>
+                      </motion.div>
+                    ))}
+
+                  </div>
+
+                  {!isRolling && startingPlayer && (
+                    <motion.h2
+                      initial={{ opacity: 0, scale: .5 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="text-center pt-4! text-3xl font-bold text-green-600"
+                    >
+                      🎉 {startingPlayer.name} starts the game!
+                    </motion.h2>
+                  )}
+
+                </div>
+              </>
+            )}
+
+
+          </div>
         </div>
 
         <div className="grid">
@@ -206,17 +323,6 @@ export default function App() {
 
           <div className="card leaderboard">
             <div className="leader-container">
-
-              {/* {leader && (
-              <div className="leader">
-                <p>Hazırkı lider</p>
-                <div className="leader-row">
-                  <h3>{leader.name}</h3>
-                  <span>{leader.score} xal</span>
-                </div>
-              </div>
-            )} */}
-
               {sortedPlayers.length === 0 ? (
                 <div></div>
               ) : (
@@ -243,7 +349,6 @@ export default function App() {
               ) : (
                 sortedPlayers.map((player, index) => (
                   <div className="player-card" key={player.id}>
-                    <div className="rank">{index + 1}</div>
 
                     <div className="player-info">
                       <div className="name-row">
@@ -253,7 +358,7 @@ export default function App() {
                         </span>
                       </div>
 
-                      <div className="action-buttons">
+                      <div className="action-buttons *:text-(--primary-color)">
                         <button
                           onClick={() => {
                             updateScore(player.id, 1);
@@ -375,7 +480,7 @@ export default function App() {
                           : "red",
                     }}
                   >
-                    <h4><span style={{color: "black !important" }}>{index + 1}.</span> {item.text}</h4>
+                    <h4><span style={{ color: "black !important" }}>{index + 1}.</span> {item.text}</h4>
                     <p>{getTimeAgo(item.time)}</p>
                   </div>
                 ))}
