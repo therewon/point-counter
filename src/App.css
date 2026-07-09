@@ -4,9 +4,17 @@
   box-sizing: border-box;
 }
 
+:root {
+  --primary-color: #355872;
+  --secondary-color: #7AAACE;
+  --third-color: #9CD5FF;
+  --forth-color: #F7F8F0;
+}
+
 body {
   font-family: Arial, sans-serif;
-  background: #f1f5f9;
+  background: var(--primary-color);
+  color: var(--forth-color);
 }
 
 .app {
@@ -34,7 +42,7 @@ body {
 }
 
 .top p {
-  color: #475569;
+  color: var(--forth-color);
 }
 
 .reset-btn,
@@ -49,18 +57,24 @@ body {
 }
 
 .reset-btn {
-  background: #0f172a;
+  background: rgb(196, 5, 5);
   color: white;
+}
+
+.reset-btn:hover {
+  background-color: red;
 }
 
 .grid {
   display: grid;
   grid-template-columns: 1fr 2fr;
+  align-items: start;
   gap: 20px;
+  margin-bottom: 20px;
 }
 
 .card {
-  background: white;
+  background: var(--secondary-color);
   border-radius: 18px;
   padding: 20px;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
@@ -68,6 +82,7 @@ body {
 
 .card h2 {
   margin-bottom: 16px;
+  color: var(--primary-color);
 }
 
 .add-box {
@@ -85,19 +100,19 @@ input {
 }
 
 .add-box button {
-  background: #2563eb;
+  background: var(--primary-color);
   color: white;
 }
 
 .leader {
-  background: #fef3c7;
+  background: var(--primary-color);
   border-radius: 14px;
   padding: 16px;
   margin-bottom: 18px;
 }
 
 .leader p {
-  color: #78716c;
+  color: var(--forth-color);
   margin-bottom: 8px;
 }
 
@@ -109,13 +124,15 @@ input {
 
 .leader-row h3 {
   font-size: 28px;
+  color: var(--forth-color);
 }
 
 .leader-row span {
-  background: white;
+  background: var(--forth-color);
   padding: 8px 14px;
   border-radius: 999px;
   font-weight: bold;
+  color: var(--primary-color);
 }
 
 .players {
@@ -155,7 +172,7 @@ input {
 }
 
 .score-badge {
-  background: #e2e8f0;
+  background: var(--primary-color);
   padding: 6px 12px;
   border-radius: 999px;
   font-size: 14px;
@@ -195,6 +212,39 @@ input {
   border: 1px dashed #cbd5e1;
   border-radius: 14px;
 }
+
+.history {
+  background-color: var(--third-color);
+  padding: 20px;
+  border-radius: 18px;
+}
+
+.history h2 {
+  color: var(--primary-color);
+  margin-bottom: 10px;
+}
+
+.history-wrapper {
+  background-color: var(--forth-color);
+  padding: 10px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.empty-history {
+  color: var(--primary-color);
+  text-align: center;
+  opacity: 0.5;
+}
+
+.history-wrapper-empty {
+  padding: 10px;
+  border-radius: 10px;
+  border: 2px dotted var(--forth-color);
+}
+
 
 @media (max-width: 900px) {
   .grid {

@@ -1,9 +1,17 @@
 import React, { useEffect, useMemo, useState } from "react";
 import "./App.css";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function App() {
   const [playerName, setPlayerName] = useState("");
+  const [history, setHistory] = useState(() => {
+    const savedHistory = localStorage.getItem("history");
+    return savedHistory ? JSON.parse(savedHistory) : [];
+  });
 
+  useEffect(() => {
+    localStorage.setItem("history", JSON.stringify(history));
+  }, [history]);
   // LocalStorage-dan oxu
   const [players, setPlayers] = useState(() => {
     const savedPlayers = localStorage.getItem("players");
@@ -30,13 +38,20 @@ export default function App() {
 
   const addPlayer = () => {
     const trimmed = playerName.trim();
-    if (!trimmed) return;
+
+    if (!trimmed) {
+      toast.warning("İstifadəçi adını daxil edin!");
+      return;
+    }
 
     const exists = players.some(
       (player) => player.name.toLowerCase() === trimmed.toLowerCase()
     );
 
-    if (exists) return;
+    if (exists) {
+      toast.error("Bu istifadəçi artıq mövcuddur!");
+      return;
+    }
 
     setPlayers((prev) => [
       ...prev,
@@ -47,10 +62,14 @@ export default function App() {
       },
     ]);
 
+    setHistory((prev) => [...prev, `${trimmed} əlavə olundu!`]);
+    toast.success(`${trimmed} əlavə olundu!`);
     setPlayerName("");
   };
 
   const removePlayer = (id) => {
+    const player = players.find((p) => p.id === id);
+
     setPlayers((prev) => prev.filter((player) => player.id !== id));
 
     setScoreInput((prev) => {
@@ -58,9 +77,18 @@ export default function App() {
       delete updated[id];
       return updated;
     });
+
+    setHistory((prev) => [
+      ...prev,
+      `${player?.name} silindi!`,
+    ]);
+
+    toast.info(`${player?.name} silindi.`);
   };
 
   const updateScore = (id, amount) => {
+    const player = players.find((p) => p.id === id);
+
     setPlayers((prev) =>
       prev.map((player) =>
         player.id === id
@@ -68,15 +96,30 @@ export default function App() {
           : player
       )
     );
+
+    if (amount > 0) {
+      setHistory((prev) => [
+        ...prev,
+        `${player?.name} +${amount} xal qazandı!`,
+      ]);
+    } else {
+      setHistory((prev) => [
+        ...prev,
+        `${player?.name} ${Math.abs(amount)} xal itirdi!`,
+      ]);
+    }
   };
 
   const resetScores = () => {
-    setPlayers((prev) =>
-      prev.map((player) => ({
-        ...player,
-        score: 0,
-      }))
-    );
+    setPlayers([]);
+    setHistory([]);
+    setScoreInput({});
+
+    localStorage.removeItem("players");
+    localStorage.removeItem("history");
+    localStorage.removeItem("scoreInput");
+
+    toast.success("Bütün məlumatlar silindi.");
   };
 
   const sortedPlayers = useMemo(() => {
@@ -87,6 +130,11 @@ export default function App() {
 
   return (
     <div className="app">
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        theme="colored"
+      />
       <div className="container">
         <div className="top">
           <div>
@@ -95,7 +143,7 @@ export default function App() {
           </div>
 
           <button className="reset-btn" onClick={resetScores}>
-            Xalları sıfırla
+            Reset Game
           </button>
         </div>
 
@@ -117,18 +165,35 @@ export default function App() {
           </div>
 
           <div className="card leaderboard">
-            <h2>Lider lövhəsi</h2>
+            <div className="leader-container">
 
-            {leader && (
+              {/* {leader && (
               <div className="leader">
                 <p>Hazırkı lider</p>
-
                 <div className="leader-row">
                   <h3>{leader.name}</h3>
                   <span>{leader.score} xal</span>
                 </div>
               </div>
-            )}
+            )} */}
+
+              {sortedPlayers.length === 0 ? (
+                <div></div>
+              ) : (
+                sortedPlayers.map((player, index) => (
+                  <div className="leader" key={index}>
+                    <p>{index === 0 ? "Leader | First Place" : (index + 1 === 2 ? "Second Place" : index + 1 === 3 ? "Third Place" : index + 1 + "th Place")}</p>
+                    <div className="leader-row">
+                      <h3>{player.name}</h3>
+                      <span>{player.score} xal</span>
+                    </div>
+                  </div>
+                )
+                ))
+              }
+            </div>
+
+
 
             <div className="players">
               {sortedPlayers.length === 0 ? (
@@ -149,20 +214,58 @@ export default function App() {
                       </div>
 
                       <div className="action-buttons">
-                        <button onClick={() => updateScore(player.id, 1)}>
+                        <button
+                          onClick={() => {
+                            updateScore(player.id, 1);
+                            toast.success(`${player.name} +1 xal qazandı`);
+                          }}
+                        >
                           +1
                         </button>
 
-                        <button onClick={() => updateScore(player.id, 5)}>
+                        <button
+                          onClick={() => {
+                            updateScore(player.id, 5);
+                            toast.success(`${player.name} +5 xal qazandı`);
+                          }}
+                        >
                           +5
                         </button>
 
-                        <button onClick={() => updateScore(player.id, 10)}>
+                        <button
+                          onClick={() => {
+                            updateScore(player.id, 10);
+                            toast.success(`${player.name} +10 xal qazandı`);
+                          }}
+                        >
                           +10
                         </button>
 
-                        <button onClick={() => updateScore(player.id, -1)}>
+                        <button
+                          onClick={() => {
+                            updateScore(player.id, -1);
+                            toast.error(`${player.name} 1 xal itirdi`);
+                          }}
+                        >
                           -1
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            updateScore(player.id, -5);
+                            toast.error(`${player.name} 5 xal itirdi`);
+                          }}
+                        >
+                          -5
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            updateScore(player.id, -10);
+                            toast.error(`${player.name} 10 xal itirdi`);
+                          }}
+                        >
+                          -10
                         </button>
                       </div>
                     </div>
@@ -209,6 +312,26 @@ export default function App() {
               )}
             </div>
           </div>
+        </div>
+
+        <div className="history">
+          <h2>History</h2>
+
+          {
+            history ? (
+              <div className="history-wrapper-empty">
+                <h4 className="empty-history">Hele ki melumat daxil edilmeyib</h4>
+              </div>
+            ) : (
+              <div className="history-wrapper">
+                {history.map((item, index) => (
+                  <div key={index} className="history-item" style={{ color: (item.includes("əlavə") || item.includes("qazandı")) ? "#22c55e" : "red" }}>
+                    <h4>{index + 1}. {item}</h4>
+                  </div>
+                ))}
+              </div>
+            )
+          }
         </div>
       </div>
     </div>
