@@ -176,8 +176,8 @@ export default function App() {
   const [activeIndex, setActiveIndex] = useState(-1);
   const [isRolling, setIsRolling] = useState(false);
   const startGame = () => {
+    players.length === 0 && toast.warning("Oyunçu əlave edin!")
     if (players.length === 0) return;
-
     setIsOpen(true);
     setIsRolling(true);
 
@@ -469,21 +469,25 @@ export default function App() {
               </div>
             ) : (
               <div className="history-wrapper">
-                {history.map((item, index) => (
-                  <div
-                    key={index}
-                    className="history-item"
-                    style={{
-                      color:
-                        item.text.includes("əlavə") || item.text.includes("qazandı")
-                          ? "#22c55e"
-                          : "red",
-                    }}
-                  >
-                    <h4><span style={{ color: "black !important" }}>{index + 1}.</span> {item.text}</h4>
-                    <p>{getTimeAgo(item.time)}</p>
-                  </div>
-                ))}
+                {[...history]
+                  .reverse()
+                  .map((item, index) => (
+                    <div
+                      key={index}
+                      className="history-item"
+                      style={{
+                        color:
+                          item.text.includes("əlavə") || item.text.includes("qazandı")
+                            ? "#22c55e"
+                            : "red",
+                      }}
+                    >
+                      <h4>
+                        <span style={{ color: "black" }}>{index + 1}.</span> {item.text}
+                      </h4>
+                      <p>{getTimeAgo(item.time)}</p>
+                    </div>
+                  ))}
               </div>
             )
           }
