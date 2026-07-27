@@ -177,7 +177,8 @@ export default function App() {
   const [isRolling, setIsRolling] = useState(false);
   const startGame = () => {
     players.length === 0 && toast.warning("Oyunçu əlave edin!")
-    if (players.length === 0) return;
+    players.length === 1 && toast.warning("Minimum 2 oyunçu olmalıdır!")
+    if (players.length === 0 || players.length === 1) return;
     setIsOpen(true);
     setIsRolling(true);
 
@@ -232,7 +233,7 @@ export default function App() {
                   onClick={() => setIsOpen(false)}
                 />
 
-                <div className="bg-[var(--primary-color)] p-5! fixed w-full sm:max-w-[750px] sm:w-1/2 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[2] rounded-[10px]">
+                <div className="bg-(--primary-color) p-5! fixed w-full sm:max-w-187.5 sm:w-1/2 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[2] rounded-[10px]">
 
                   <div className="flex justify-between items-center  max-sm:p-4!">
                     <h1 className="sm:text-xl! text-lg! font-bold ">
@@ -347,7 +348,7 @@ export default function App() {
                   Hələ istifadəçi əlavə edilməyib.
                 </div>
               ) : (
-                sortedPlayers.map((player, index) => (
+                players.map((player, index) => (
                   <div className="player-card" key={player.id}>
 
                     <div className="player-info">
