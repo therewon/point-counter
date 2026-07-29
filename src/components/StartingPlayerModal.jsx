@@ -1,4 +1,5 @@
 import { IoMdClose } from "react-icons/io";
+import { motion } from "framer-motion";
 
 const StartingPlayerModal = ({
   players,
