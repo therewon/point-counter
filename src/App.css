@@ -12,9 +12,97 @@
 }
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: "DM Sans", Arial, sans-serif;
   background: var(--primary-color);
   color: var(--forth-color);
+}
+
+.main-header {
+  margin-bottom: 28px;
+  border-bottom: 1px solid rgba(247, 248, 240, 0.2);
+}
+
+.main-header__inner {
+  min-height: 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  padding: 20px 12px;
+}
+
+.main-brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 32px;
+  font-weight: 800;
+}
+
+.main-brand__mark {
+  width: 39px;
+  height: 39px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  color: #173f34;
+  background: #d9fa6f;
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 8px 7px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.user-menu__avatar {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  color: var(--primary-color);
+  background: var(--forth-color);
+}
+
+.user-menu__details {
+  min-width: 90px;
+  display: flex;
+  flex-direction: column;
+}
+
+.user-menu__details small {
+  color: rgba(247, 248, 240, 0.65);
+  font-size: 10px;
+}
+
+.user-menu__details strong {
+  max-width: 150px;
+  overflow: hidden;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.logout-button {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 10px;
+  color: #f7f8f0;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.logout-button:hover {
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .app {
@@ -151,6 +239,13 @@ input {
   margin-bottom: 18px;
 }
 
+.active-leader {
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 18px;
+  border-width: 2px;
+}
+
 .leader p {
   color: var(--forth-color);
   margin-bottom: 8px;
@@ -164,7 +259,7 @@ input {
 
 .leader-row h3 {
   font-size: 28px;
-  color: var(--forth-color);
+  /* color: var(--forth-color); */
 }
 
 .leader-row span {
@@ -308,5 +403,23 @@ input {
 
   .custom-score {
     width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  .main-header__inner {
+    min-height: 82px;
+  }
+
+  .main-brand {
+    font-size: 0;
+  }
+
+  .user-menu__details {
+    min-width: 0;
+  }
+
+  .user-menu__details strong {
+    max-width: 105px;
   }
 }

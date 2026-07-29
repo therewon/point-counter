@@ -1,1 +1,18 @@
 @import "tailwindcss";
+
+html {
+  min-width: 320px;
+  background: #f8f6f1;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+  outline: 3px solid rgba(217, 250, 111, 0.75);
+  outline-offset: 3px;
+}
