@@ -23,7 +23,6 @@ body {
 }
 
 .main-header__inner {
-  min-height: 100px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -107,7 +106,6 @@ body {
 
 .app {
   min-height: 100vh;
-  padding: 30px 16px;
 }
 
 .container {
@@ -409,10 +407,13 @@ input {
 @media (max-width: 560px) {
   .main-header__inner {
     min-height: 82px;
+    justify-content: start;
+    padding: 0 12px ;
   }
 
   .main-brand {
     font-size: 0;
+    display: none;
   }
 
   .user-menu__details {

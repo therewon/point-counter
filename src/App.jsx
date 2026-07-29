@@ -35,7 +35,7 @@ export default function App() {
       <ToastContainer position="top-right" autoClose={3000} theme="colored" />
       <Header />
 
-      <div className="container">
+      <div className="container px-3!">
         <AppHeader
           onChooseStarter={chooseStartingPlayer}
           onReset={resetGame}
