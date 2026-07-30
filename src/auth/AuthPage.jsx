@@ -172,20 +172,20 @@ export default function AuthPage({ mode }) {
             </div>
             <div className="score-preview__rows">
               <div className="score-preview__row is-leading">
-                <span className="player-avatar">A</span>
+                <span className="player-avatar">R</span>
                 <span className="player-name">
-                  Aylin <small>Lider</small>
+                  Revan <small>Lider</small>
                 </span>
                 <strong>128</strong>
               </div>
               <div className="score-preview__row">
-                <span className="player-avatar">K</span>
-                <span className="player-name">Kamran</span>
+                <span className="player-avatar">O</span>
+                <span className="player-name">Orxan</span>
                 <strong>112</strong>
               </div>
               <div className="score-preview__row">
-                <span className="player-avatar">N</span>
-                <span className="player-name">Nigar</span>
+                <span className="player-avatar">M</span>
+                <span className="player-name">Murad</span>
                 <strong>96</strong>
               </div>
             </div>

@@ -10,6 +10,7 @@ const AddPlayerForm = ({ playerName, onPlayerNameChange, onAddPlayer }) => {
           value={playerName}
           onChange={(event) => onPlayerNameChange(event.target.value)}
           onKeyDown={(event) => event.key === "Enter" && onAddPlayer()}
+          className="text-black/60 bg-white border-black/70"
         />
 
         <button onClick={onAddPlayer}>Əlavə et</button>

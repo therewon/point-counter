@@ -12,7 +12,7 @@ const StartingPlayerModal = ({
     <>
       <div className="choose-player-overlay" onClick={onClose} />
 
-      <div className="bg-(--primary-color) p-5! fixed w-full sm:max-w-187.5 sm:w-1/2 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[2] rounded-[10px]">
+      <div className="bg-(--primary-color) p-5! fixed w-full sm:max-w-187.5 sm:w-1/2 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-2 rounded-[10px]">
         <div className="flex justify-between items-center max-sm:p-4!">
           <h1 className="sm:text-xl! text-lg! font-bold">
             Choose a player who starts the game
