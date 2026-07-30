@@ -149,7 +149,7 @@ export default function App() {
 
         <History history={history} />
 
-        <SaveGameButton onClick={openSaveGameModal} />
+        <SaveGameButton onClick={openSaveGameModal} players={players} />
       </div>
 
       {isStartModalOpen && (
