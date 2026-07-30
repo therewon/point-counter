@@ -56,7 +56,7 @@ const Header = () => {
                         Məxfilik siyasəti
                     </NavLink>
                 </div>
-                <UserMenuButton />
+                <UserMenuButton mobile={false}/>
             </div>
             {/* Overlay */}
             <div
@@ -114,9 +114,9 @@ const Header = () => {
                         </button>
                     </Link>
 
-                    <div className="absolute bottom-2">
-                        <UserMenuButton />
-                    </div>
+                    <UserMenuButton mobile={true}/>
+                    {/* <div className="absolute bottom-2">
+                    </div> */}
                 </nav>
             </aside>
         </header>
