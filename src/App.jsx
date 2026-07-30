@@ -146,7 +146,6 @@ export default function App() {
         theme="colored"
       />
 
-      <Header />
 
       <div className="container px-3!">
         <AppHeader

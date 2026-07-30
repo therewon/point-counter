@@ -15,7 +15,7 @@ const PrivacyPolicy = () => {
 
         <section className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-2xl backdrop-blur-md">
           <div className="border-b border-white/10 px-5 py-8 sm:px-8">
-            <div className="mb-5 grid size-14 place-items-center rounded-2xl bg-white/10 text-2xl">
+            <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-2xl">
               <FiShield />
             </div>
 
@@ -58,14 +58,30 @@ const PrivacyPolicy = () => {
               title="Məlumatlardan necə istifadə edirik?"
               icon={<FiLock />}
             >
-              <p>Toplanan məlumatlar aşağıdakı məqsədlər üçün istifadə olunur:</p>
+              <p>
+                Toplanan məlumatlar aşağıdakı məqsədlər üçün istifadə olunur:
+              </p>
 
               <ul className="mt-4 space-y-3">
-                <ListItem>İstifadəçi hesabının yaradılması və idarəsi</ListItem>
-                <ListItem>Oyun nəticələrinin və tarixçəsinin saxlanılması</ListItem>
-                <ListItem>Tətbiqin təhlükəsizliyinin təmin edilməsi</ListItem>
-                <ListItem>İstifadəçi təcrübəsinin yaxşılaşdırılması</ListItem>
-                <ListItem>Texniki problemlərin aşkarlanması və aradan qaldırılması</ListItem>
+                <ListItem>
+                  İstifadəçi hesabının yaradılması və idarəsi
+                </ListItem>
+
+                <ListItem>
+                  Oyun nəticələrinin və tarixçəsinin saxlanılması
+                </ListItem>
+
+                <ListItem>
+                  Tətbiqin təhlükəsizliyinin təmin edilməsi
+                </ListItem>
+
+                <ListItem>
+                  İstifadəçi təcrübəsinin yaxşılaşdırılması
+                </ListItem>
+
+                <ListItem>
+                  Texniki problemlərin aşkarlanması və aradan qaldırılması
+                </ListItem>
               </ul>
             </PolicySection>
 
@@ -76,8 +92,8 @@ const PrivacyPolicy = () => {
             >
               <p>
                 Point Counter istifadəçi qeydiyyatı, giriş əməliyyatları və
-                məlumatların saxlanılması üçün Firebase Authentication və
-                Cloud Firestore xidmətlərindən istifadə edə bilər.
+                məlumatların saxlanılması üçün Firebase Authentication və Cloud
+                Firestore xidmətlərindən istifadə edə bilər.
               </p>
 
               <p>
@@ -98,7 +114,7 @@ const PrivacyPolicy = () => {
               <p>
                 Məlumatlar yalnız tətbiqin işləməsi üçün istifadə olunan xidmət
                 təminatçıları ilə və ya qanuni tələb yarandığı hallarda
-                paylaşılabilir.
+                paylaşıla bilər.
               </p>
             </PolicySection>
 
@@ -156,10 +172,7 @@ const PrivacyPolicy = () => {
               </p>
             </PolicySection>
 
-            <PolicySection
-              number="09"
-              title="Əlaqə"
-            >
+            <PolicySection number="09" title="Əlaqə">
               <p>
                 Məxfilik siyasəti və şəxsi məlumatlarla bağlı suallarınız üçün
                 bizimlə əlaqə saxlaya bilərsiniz.
@@ -183,7 +196,7 @@ const PolicySection = ({ number, title, icon, children }) => {
   return (
     <section>
       <div className="mb-4 flex items-start gap-4">
-        <span className="grid size-14 shrink-0 place-items-center rounded-xl bg-white/10 text-xl font-bold text-white/70">
+        <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-white/10 text-xl font-bold text-white/70">
           {icon || number}
         </span>
 
@@ -192,11 +205,13 @@ const PolicySection = ({ number, title, icon, children }) => {
             Bölmə {number}
           </span>
 
-          <h2 className="mt-1 text-xl font-semibold sm:text-2xl">{title}</h2>
+          <h2 className="mt-1 text-xl font-semibold sm:text-2xl">
+            {title}
+          </h2>
         </div>
       </div>
 
-      <div className="space-y-4 pl-0 text-sm leading-7 text-white/70 sm:pl-15 sm:text-base">
+      <div className="space-y-4 pl-0 text-sm leading-7 text-white/70 sm:pl-16 sm:text-base">
         {children}
       </div>
     </section>
@@ -206,7 +221,8 @@ const PolicySection = ({ number, title, icon, children }) => {
 const ListItem = ({ children }) => {
   return (
     <li className="flex items-start gap-3">
-      <span className="mt-2 size-1.5 shrink-0 rounded-full bg-white/60" />
+      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/60" />
+
       <span>{children}</span>
     </li>
   );

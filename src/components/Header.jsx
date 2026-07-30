@@ -4,6 +4,7 @@ import { auth } from "../firebase";
 import { useAuth } from "../auth/AuthContext";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const Header = () => {
     const { user } = useAuth();
@@ -13,12 +14,50 @@ const Header = () => {
         <header className="main-header">
             <div className="container flex items-center justify-between px-3 py-5">
                 <div className="flex gap-2 items-center">
-                    <button className="sm:hidden" onClick={() => setIsOpen(true)}>
+                    <button className="lg:hidden" onClick={() => setIsOpen(true)}>
                         <FiMenu size={25} />
                     </button>
-                    <div className="sm:text-[32px] text-xl font-bold ">
+                    <a href="/" className="sm:text-[32px] text-xl font-bold ">
                         <span>Point Counter</span>
-                    </div>
+                    </a>
+                </div>
+                <div className="flex gap-6 max-lg:hidden *:whitespace-nowrap">
+                    <NavLink
+                        to="/"
+                        end
+                        className={({ isActive }) =>
+                            `rounded-lg px-3 py-3 transition ${isActive
+                                ? "bg-white/10 text-white"
+                                : "text-white/70 hover:bg-white/10 hover:text-white"
+                            }`
+                        }
+                    >
+                        Ana səhifə
+                    </NavLink>
+
+                    <NavLink
+                        to="/about"
+                        className={({ isActive }) =>
+                            `rounded-lg px-3 py-3 transition ${isActive
+                                ? "bg-white/10 text-white"
+                                : "text-white/70 hover:bg-white/10 hover:text-white"
+                            }`
+                        }
+                    >
+                        Haqqımızda
+                    </NavLink>
+
+                    <NavLink
+                        to="/privacy-and-policy"
+                        className={({ isActive }) =>
+                            `rounded-lg px-3 py-3 transition ${isActive
+                                ? "bg-white/10 text-white"
+                                : "text-white/70 hover:bg-white/10 hover:text-white"
+                            }`
+                        }
+                    >
+                        Məxfilik siyasəti
+                    </NavLink>
                 </div>
                 <div className="user-menu max-sm:hidden!">
                     <span className="user-menu__avatar" aria-hidden="true">
@@ -50,7 +89,7 @@ const Header = () => {
 
             {/* Soldan açılan mobile menu */}
             <aside
-                className={`fixed left-0 top-0 z-50 h-dvh w-70 max-w-[65%] bg-(--primary-color) py-6 shadow-2xl transition-transform duration-300 ease-in-out min-[561px]:hidden ${isOpen ? "translate-x-0" : "-translate-x-full"
+                className={`fixed left-0 top-0 z-50 h-dvh w-70 max-w-[65%] bg-(--primary-color) py-6 shadow-2xl transition-transform duration-300 ease-in-out min-lg:hidden ${isOpen ? "translate-x-0" : "-translate-x-full"
                     }`}
             >
                 <div className="mb-8 flex items-start justify-between border-b pb-3 px-3">
@@ -75,33 +114,35 @@ const Header = () => {
                         Ana səhifə
                     </button>
 
-                    <button
-                        type="button"
-                        className="w-full rounded-lg py-3 text-left transition hover:bg-white/10"
-                        onClick={() => setIsOpen(false)}
-                    >
-                        Haqqımızda
-                    </button>
+                    <Link to="/about">
+                        <button
+                            type="button"
+                            className="w-full rounded-lg py-3 text-left transition hover:bg-white/10"
+                            onClick={() => setIsOpen(false)}
+                        >
+                            Haqqımızda
+                        </button>
+                    </Link>
 
                     <Link to="/privacy-and-policy">
-                    <button
-                        type="button"
-                        className="w-full rounded-lg py-3 text-left transition hover:bg-white/10"
-                        onClick={() => setIsOpen(false)}
-                    >
-                        Privacy and Policy
-                    </button>
+                        <button
+                            type="button"
+                            className="w-full rounded-lg py-3 text-left transition hover:bg-white/10"
+                            onClick={() => setIsOpen(false)}
+                        >
+                            Privacy and Policy
+                        </button>
                     </Link>
 
                     <div className="user-menu justify-between! absolute bottom-2">
                         <div className="flex items-center gap-2">
                             <span className="user-menu__avatar" aria-hidden="true">
-                            <FiUser />
-                        </span>
-                        <span className="user-menu__details">
-                            <small>Xoş gəldiniz</small>
-                            <strong>{displayName}</strong>
-                        </span>
+                                <FiUser />
+                            </span>
+                            <span className="user-menu__details">
+                                <small>Xoş gəldiniz</small>
+                                <strong>{displayName}</strong>
+                            </span>
                         </div>
                         <button
                             type="button"
