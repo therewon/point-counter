@@ -1,15 +1,12 @@
-import { signOut } from "firebase/auth";
-import { FiLogOut, FiMenu, FiX, FiUser } from "react-icons/fi";
-import { auth } from "../firebase";
-import { useAuth } from "../auth/AuthContext";
+import { FiMenu, FiX } from "react-icons/fi";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { NavLink } from "react-router-dom";
+import UserMenuButton from "./UserMenuButton";
 
 const Header = () => {
-    const { user } = useAuth();
-    const displayName = user?.displayName || "Oyunçu";
     const [isOpen, setIsOpen] = useState(false)
+
     return (
         <header className="main-header">
             <div className="container flex items-center justify-between px-3 py-5">
@@ -59,24 +56,7 @@ const Header = () => {
                         Məxfilik siyasəti
                     </NavLink>
                 </div>
-                <div className="user-menu max-sm:hidden!">
-                    <span className="user-menu__avatar" aria-hidden="true">
-                        <FiUser />
-                    </span>
-                    <span className="user-menu__details">
-                        <small>Xoş gəldiniz</small>
-                        <strong>{displayName}</strong>
-                    </span>
-                    <button
-                        type="button"
-                        className="logout-button"
-                        onClick={() => signOut(auth)}
-                        aria-label="Hesabdan çıx"
-                        title="Hesabdan çıx"
-                    >
-                        <FiLogOut />
-                    </button>
-                </div>
+                <UserMenuButton />
             </div>
             {/* Overlay */}
             <div
@@ -134,25 +114,8 @@ const Header = () => {
                         </button>
                     </Link>
 
-                    <div className="user-menu justify-between! absolute bottom-2">
-                        <div className="flex items-center gap-2">
-                            <span className="user-menu__avatar" aria-hidden="true">
-                                <FiUser />
-                            </span>
-                            <span className="user-menu__details">
-                                <small>Xoş gəldiniz</small>
-                                <strong>{displayName}</strong>
-                            </span>
-                        </div>
-                        <button
-                            type="button"
-                            className="logout-button"
-                            onClick={() => signOut(auth)}
-                            aria-label="Hesabdan çıx"
-                            title="Hesabdan çıx"
-                        >
-                            <FiLogOut />
-                        </button>
+                    <div className="absolute bottom-2">
+                        <UserMenuButton />
                     </div>
                 </nav>
             </aside>

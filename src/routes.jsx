@@ -4,7 +4,7 @@ import App from "./App";
 import Login from "./auth/Login";
 import Register from "./auth/Register";
 import ProtectedRoute from "./auth/ProtectedRoute";
-import NotFound from "./not-found/NotFound";
+import NotFound from "./pages/NotFound";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import About from "./pages/About";
 import MainLayout from "./layout/MainLayout";
