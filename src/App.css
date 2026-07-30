@@ -188,7 +188,6 @@ body {
 .grid {
   display: grid;
   grid-template-columns: 1fr 2fr;
-  align-items: start;
   gap: 20px;
   margin-bottom: 20px;
 }
@@ -402,7 +401,7 @@ input {
   .main-header__inner {
     min-height: 82px;
     justify-content: start;
-    padding: 0 12px ;
+    padding: 0 12px;
   }
 
   .main-brand {

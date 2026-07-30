@@ -45,7 +45,7 @@ function getErrorMessage(error, isLogin) {
 export default function AuthPage({ mode }) {
   const isLogin = mode === "login";
   const navigate = useNavigate();
-  const { user, authLoading } = useAuth();
+  const { user, authLoading, refreshUser } = useAuth();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -72,8 +72,8 @@ export default function AuthPage({ mode }) {
   );
 
   useEffect(() => {
-    if (!authLoading && user) {
-      navigate("/", { replace: true });
+    if (!authLoading && user) { 
+        navigate("/", { replace: true }); 
     }
   }, [authLoading, navigate, user]);
 
@@ -112,17 +112,20 @@ export default function AuthPage({ mode }) {
         await signInWithEmailAndPassword(
           auth,
           formData.email.trim(),
-          formData.password,
+          formData.password
         );
       } else {
         const credential = await createUserWithEmailAndPassword(
           auth,
           formData.email.trim(),
-          formData.password,
+          formData.password
         );
+
         await updateProfile(credential.user, {
           displayName: formData.name.trim(),
         });
+
+        await refreshUser();
       }
 
       navigate("/", { replace: true });

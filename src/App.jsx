@@ -154,7 +154,7 @@ export default function App() {
           onReset={resetGame}
         />
 
-        <div className="grid">
+        <div className="grid items-start">
           <AddPlayerForm
             playerName={playerName}
             onPlayerNameChange={setPlayerName}

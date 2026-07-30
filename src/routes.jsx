@@ -4,6 +4,7 @@ import Login from "./auth/Login";
 import Register from "./auth/Register";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import NotFound from "./not-found/NotFound";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 export const router = createBrowserRouter([
   {
@@ -26,4 +27,8 @@ export const router = createBrowserRouter([
     path: "*",
     element: <NotFound />,
   },
+  {
+    path: "/privacy-and-policy",
+    element: <PrivacyPolicy />
+  }
 ]);

@@ -17,14 +17,27 @@ export function AuthProvider({ children }) {
     return unsubscribe;
   }, []);
 
+  const refreshUser = async () => {
+    if (!auth.currentUser) return;
+
+    await auth.currentUser.reload();
+
+    setUser({ ...auth.currentUser });
+  };
+
   return (
-    <AuthContext.Provider value={{ user, authLoading }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        authLoading,
+        refreshUser,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 }
 
-// This colocated hook keeps the small authentication context easy to follow.
 // eslint-disable-next-line react-refresh/only-export-components
 export function useAuth() {
   const context = useContext(AuthContext);
