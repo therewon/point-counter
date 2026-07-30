@@ -301,6 +301,87 @@
   gap: 17px;
 }
 
+.auth-social {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.auth-social__button {
+  min-width: 0;
+  min-height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 15px;
+  border: 1px solid #dce1dc;
+  border-radius: 13px;
+  background: #fffefa;
+  color: #20372f;
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.auth-social__button svg {
+  flex: 0 0 auto;
+  font-size: 20px;
+}
+
+.auth-social__button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  border-color: #9aaba3;
+  background: #ffffff;
+  box-shadow: 0 10px 24px rgba(21, 63, 51, 0.09);
+}
+
+.auth-social__button--apple {
+  border-color: #111c18;
+  color: #ffffff;
+  background: #111c18;
+}
+
+.auth-social__button--apple:hover:not(:disabled) {
+  border-color: #1d4437;
+  background: #1d4437;
+  box-shadow: 0 12px 26px rgba(17, 28, 24, 0.2);
+}
+
+.auth-social__button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #98a39e;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  height: 1px;
+  flex: 1;
+  background: #dfe4df;
+}
+
+.auth-divider span {
+  flex: 0 0 auto;
+}
+
 .auth-field {
   display: flex;
   flex-direction: column;
@@ -569,6 +650,10 @@
   .auth-card h2 {
     font-size: 31px;
   }
+
+  .auth-social {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -577,6 +662,10 @@
   }
 
   .auth-submit {
+    transition: none;
+  }
+
+  .auth-social__button {
     transition: none;
   }
 }

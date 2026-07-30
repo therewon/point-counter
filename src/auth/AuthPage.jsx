@@ -1,10 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  OAuthProvider,
   signInWithEmailAndPassword,
+  signInWithPopup,
   updateProfile,
 } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
+import { FaApple } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 import {
   FiArrowRight,
   FiCheck,
@@ -20,15 +25,24 @@ import "./auth.css";
 
 const firebaseErrors = {
   "auth/email-already-in-use": "Bu e-poçt ünvanı artıq istifadə olunur.",
+  "auth/account-exists-with-different-credential":
+    "Bu e-poçt ünvanı başqa giriş üsulu ilə istifadə olunur.",
+  "auth/cancelled-popup-request": "Əvvəlki giriş cəhdi ləğv edildi.",
   "auth/invalid-credential": "E-poçt və ya şifrə yanlışdır.",
   "auth/invalid-email": "Düzgün e-poçt ünvanı daxil edin.",
   "auth/missing-password": "Şifrənizi daxil edin.",
   "auth/network-request-failed":
     "İnternet bağlantısını yoxlayıb yenidən cəhd edin.",
   "auth/operation-not-allowed":
-    "E-poçt ilə giriş Firebase panelində aktiv edilməyib.",
+    "Bu giriş üsulu Firebase panelində aktiv edilməyib.",
+  "auth/popup-blocked":
+    "Giriş pəncərəsi brauzer tərəfindən bloklandı. Pop-up icazəsini aktiv edib yenidən cəhd edin.",
+  "auth/popup-closed-by-user":
+    "Giriş tamamlanmadan pəncərə bağlandı. Yenidən cəhd edə bilərsiniz.",
   "auth/too-many-requests":
     "Çox sayda uğursuz cəhd edildi. Bir az sonra yenidən yoxlayın.",
+  "auth/unauthorized-domain":
+    "Bu domen Firebase girişləri üçün təsdiqlənməyib.",
   "auth/user-disabled": "Bu hesab deaktiv edilib.",
   "auth/weak-password": "Şifrə ən azı 6 simvoldan ibarət olmalıdır.",
 };
@@ -54,7 +68,9 @@ export default function AuthPage({ mode }) {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [socialLoading, setSocialLoading] = useState("");
   const [error, setError] = useState("");
+  const isBusy = loading || Boolean(socialLoading);
 
   const content = useMemo(
     () => ({
@@ -133,6 +149,31 @@ export default function AuthPage({ mode }) {
       setError(getErrorMessage(submitError, isLogin));
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSocialSignIn = async (providerName) => {
+    setError("");
+    setSocialLoading(providerName);
+
+    try {
+      let provider;
+
+      if (providerName === "google") {
+        provider = new GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: "select_account" });
+      } else {
+        provider = new OAuthProvider("apple.com");
+        provider.addScope("email");
+        provider.addScope("name");
+      }
+
+      await signInWithPopup(auth, provider);
+      navigate("/", { replace: true });
+    } catch (signInError) {
+      setError(getErrorMessage(signInError, isLogin));
+    } finally {
+      setSocialLoading("");
     }
   };
 
@@ -220,6 +261,42 @@ export default function AuthPage({ mode }) {
           </div>
 
           <form className="auth-form" onSubmit={handleSubmit} noValidate>
+            <div className="auth-social">
+              <button
+                className="auth-social__button auth-social__button--google"
+                type="button"
+                onClick={() => handleSocialSignIn("google")}
+                disabled={isBusy}
+                aria-label="Google ilə davam et"
+              >
+                <FcGoogle aria-hidden="true" />
+                <span>
+                  {socialLoading === "google"
+                    ? "Google açılır..."
+                    : "Google ilə davam et"}
+                </span>
+              </button>
+
+              <button
+                className="auth-social__button auth-social__button--apple"
+                type="button"
+                onClick={() => handleSocialSignIn("apple")}
+                disabled={isBusy}
+                aria-label="Apple ilə davam et"
+              >
+                <FaApple aria-hidden="true" />
+                <span>
+                  {socialLoading === "apple"
+                    ? "Apple açılır..."
+                    : "Apple ilə davam et"}
+                </span>
+              </button>
+            </div>
+
+            <div className="auth-divider" aria-hidden="true">
+              <span>və ya e-poçt ilə</span>
+            </div>
+
             {!isLogin && (
               <label className="auth-field">
                 <span>Ad və soyad</span>
@@ -304,7 +381,7 @@ export default function AuthPage({ mode }) {
               </div>
             )}
 
-            <button className="auth-submit" type="submit" disabled={loading}>
+            <button className="auth-submit" type="submit" disabled={isBusy}>
               <span>{loading ? content.loading : content.button}</span>
               <FiArrowRight aria-hidden="true" />
             </button>
