@@ -12,7 +12,7 @@ const PlayerCard = ({
     <div className="player-card">
       <div className="player-info">
         <div className="name-row">
-          <h3>{player.name}</h3>
+          <h3 className="max-w-25 truncate">{player.name}</h3>
           <span className="score-badge">{player.score} xal</span>
         </div>
 

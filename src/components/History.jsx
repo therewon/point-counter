@@ -31,7 +31,7 @@ const History = ({ history }) => {
               className="history-item"
               style={{ color: getHistoryColor(item.text) }}
             >
-              <h4>
+              <h4 className="truncate max-w-40">
                 <span style={{ color: "black" }}>{index + 1}.</span> {item.text}
               </h4>
               <p>{getTimeAgo(item.time, now)}</p>
