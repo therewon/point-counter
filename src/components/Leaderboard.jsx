@@ -20,7 +20,7 @@ const Leaderboard = ({ players }) => {
           <p>{getPlaceLabel(index)}</p>
 
           <div className="leader-row">
-            <h3 className="truncate max-w-25">{player.name}</h3>
+            <h3 className="truncate max-w-40">{player.name}</h3>
             <span>{player.score} xal</span>
           </div>
         </div>

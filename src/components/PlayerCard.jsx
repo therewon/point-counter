@@ -9,16 +9,16 @@ const PlayerCard = ({
   onRemove,
 }) => {
   return (
-    <div className="player-card">
-      <div className="player-info">
+    <div className="sm:flex items-center justify-between gap-4 rounded-2xl border border-slate-200 p-4">
+      <div className="mb-4">
         <div className="name-row">
-          <h3 className="max-w-25 truncate">{player.name}</h3>
+          <h3 className="max-w-35 truncate">{player.name}</h3>
           <span className="score-badge">{player.score} xal</span>
         </div>
 
         <div className="action-buttons *:text-(--primary-color)">
           {SCORE_ACTIONS.map((amount) => (
-            <button key={amount} onClick={() => onScoreChange(player.id, amount)}>
+            <button key={amount} className="w-20 h-15" onClick={() => onScoreChange(player.id, amount)}>
               {amount > 0 ? `+${amount}` : amount}
             </button>
           ))}
