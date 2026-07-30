@@ -2,6 +2,9 @@ import {
   addDoc,
   collection,
   serverTimestamp,
+  getDocs,
+  query,
+  orderBy,
 } from "firebase/firestore";
 
 import { db } from "../firebase";
@@ -47,4 +50,18 @@ export const saveGame = async ({
   );
 
   return documentReference.id;
+};
+
+export const getAllGames = async () => {
+  const gamesQuery = query(
+    collection(db, "savedGames"),
+    orderBy("createdAt", "desc")
+  );
+
+  const snapshot = await getDocs(gamesQuery);
+
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
 };

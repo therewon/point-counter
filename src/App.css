@@ -1,9 +1,3 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 :root {
   --primary-color: #355872;
   --secondary-color: #7AAACE;
@@ -423,4 +417,14 @@ input {
   .user-menu__details strong {
     max-width: 105px;
   }
+}
+
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }

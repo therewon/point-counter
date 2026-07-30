@@ -14,12 +14,18 @@ import SaveGameModal from "./components/SaveGameModal";
 import { usePointCounter } from "./hooks/usePointCounter";
 import { auth } from "./firebase";
 import { saveGame } from "./services/GameServices";
+import AllGamesButton from "./components/AllGamesButton";
+import { getAllGames } from "./services/GameServices";
+import AllGamesModal from "./components/AllGamesModal";
 
 export default function App() {
   const user = auth.currentUser;
 
   const [isSaveGameModalOpen, setIsSaveGameModalOpen] = useState(false);
   const [isSavingGame, setIsSavingGame] = useState(false);
+
+  const [games, setGames] = useState([]);
+  const [loadingGames, setLoadingGames] = useState(false);
 
   const {
     playerName,
@@ -41,6 +47,25 @@ export default function App() {
     chooseStartingPlayer,
     closeStartModal,
   } = usePointCounter();
+
+
+  const [isAllGamesModalOpen, setIsAllGamesModalOpen] = useState(false);
+  const fetchGames = async () => {
+    setLoadingGames(true);
+
+    try {
+      const data = await getAllGames();
+      setGames(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoadingGames(false);
+    }
+  };
+  const openAllGamesModal = async () => {
+    await fetchGames();
+    setIsAllGamesModalOpen(true);
+  };
 
   const winner = useMemo(() => {
     if (!players.length) {
@@ -149,8 +174,19 @@ export default function App() {
 
         <History history={history} />
 
-        <SaveGameButton onClick={openSaveGameModal} players={players} />
+        <div className="flex justify-end items-center py-4! gap-2">
+          <AllGamesButton onClick={openAllGamesModal} />
+          <SaveGameButton onClick={openSaveGameModal} players={players} />
+        </div>
       </div>
+
+      {isAllGamesModalOpen && (
+        <AllGamesModal
+          games={games}
+          loading={loadingGames}
+          onClose={() => setIsAllGamesModalOpen(false)}
+        />
+      )}
 
       {isStartModalOpen && (
         <StartingPlayerModal

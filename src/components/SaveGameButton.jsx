@@ -2,7 +2,6 @@ import React from "react";
 
 const SaveGameButton = ({ onClick, disabled = false, players }) => {
   return (
-    <div className="flex justify-end items-center py-4! px-3">
       <button
         type="button"
         onClick={onClick}
@@ -11,7 +10,6 @@ const SaveGameButton = ({ onClick, disabled = false, players }) => {
       >
         Save Game
       </button>
-    </div>
   );
 };
 
