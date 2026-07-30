@@ -30,7 +30,8 @@ const Footer = () => {
             <div className="flex flex-col gap-3 text-white/60">
               <Link
                 to="/"
-                className="transition hover:text-white"
+                className="transition hover:text-white duration-1200"
+                onClick={()=> scrollTo(0,0)}
               >
                 Ana səhifə
               </Link>
@@ -38,6 +39,7 @@ const Footer = () => {
               <Link
                 to="/about"
                 className="transition hover:text-white"
+                onClick={()=> scrollTo(0,0)}
               >
                 Haqqımızda
               </Link>
@@ -45,6 +47,7 @@ const Footer = () => {
               <Link
                 to="/privacy-and-policy"
                 className="transition hover:text-white"
+                onClick={()=> scrollTo(0,0)}
               >
                 Məxfilik siyasəti
               </Link>
