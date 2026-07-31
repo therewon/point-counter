@@ -59,7 +59,7 @@
               ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 50"
             },
             "score": {
-              ".write": "auth != null && newData.isNumber() && ((auth.uid === $uid && data.parent().parent().parent().child('status').val() === 'playing' && (newData.val() === data.val() - 10 || newData.val() === data.val() - 1 || newData.val() === data.val() + 1 || newData.val() === data.val() + 10) && (data.parent().parent().parent().child('settings').child('allowNegativeScore').val() === true || newData.val() >= 0)) || (data.parent().parent().parent().child('hostId').val() === auth.uid && data.parent().parent().parent().child('status').val() === 'finished' && newData.val() === 0))",
+              ".write": "auth != null && newData.isNumber() && ((auth.uid === $uid && data.parent().parent().parent().child('status').val() === 'playing' && (newData.val() === data.val() - 5 || newData.val() === data.val() - 1 || newData.val() === data.val() + 1 || newData.val() === data.val() + 5) && (data.parent().parent().parent().child('settings').child('allowNegativeScore').val() === true || newData.val() >= 0)) || (data.parent().parent().parent().child('hostId').val() === auth.uid && data.parent().parent().parent().child('status').val() === 'finished' && newData.val() === 0))",
               ".validate": "newData.isNumber() && (newData.parent().parent().parent().child('settings').child('allowNegativeScore').val() === true || newData.val() >= 0)"
             },
             "isHost": {
@@ -76,6 +76,39 @@
             "lastSeen": {
               ".write": "auth != null && auth.uid === $uid && data.parent().exists() && newData.isNumber()",
               ".validate": "newData.isNumber()"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        },
+        "history": {
+          "$eventId": {
+            ".write": "auth != null && !data.exists() && newData.exists() && newData.child('userId').val() === auth.uid && data.parent().parent().child('players').child(auth.uid).exists()",
+            ".validate": "newData.hasChildren(['id', 'type', 'userId', 'playerName', 'createdAt']) && newData.child('id').val() === $eventId && ((newData.child('type').val() === 'score' && newData.hasChildren(['amount', 'previousScore', 'newScore'])) || newData.child('type').val() === 'join' || newData.child('type').val() === 'leave' || newData.child('type').val() === 'offline')",
+            "id": {
+              ".validate": "newData.isString() && newData.val() === $eventId"
+            },
+            "type": {
+              ".validate": "newData.isString() && (newData.val() === 'join' || newData.val() === 'leave' || newData.val() === 'offline' || newData.val() === 'score')"
+            },
+            "userId": {
+              ".validate": "newData.isString() && newData.val() === auth.uid"
+            },
+            "playerName": {
+              ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 50"
+            },
+            "createdAt": {
+              ".validate": "newData.isNumber()"
+            },
+            "amount": {
+              ".validate": "newData.isNumber() && newData.parent().child('type').val() === 'score' && (newData.val() === -5 || newData.val() === -1 || newData.val() === 1 || newData.val() === 5)"
+            },
+            "previousScore": {
+              ".validate": "newData.isNumber()"
+            },
+            "newScore": {
+              ".validate": "newData.isNumber() && newData.val() === newData.parent().child('previousScore').val() + newData.parent().child('amount').val() && newData.val() === newData.parent().parent().parent().child('players').child(auth.uid).child('score').val()"
             },
             "$other": {
               ".validate": false

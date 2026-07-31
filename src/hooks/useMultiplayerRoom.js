@@ -50,19 +50,18 @@ export const useMultiplayerRoom = (roomCode) => {
   }, [roomCode]);
 
   const isMember = Boolean(user?.uid && room?.players?.[user.uid]);
-
-  useEffect(() => {
-    if (!user?.uid || !isMember) {
-      return undefined;
-    }
-
-    return setupPlayerPresence(roomCode, user.uid);
-  }, [isMember, roomCode, user?.uid]);
-
   const currentPlayer = useMemo(
     () => (user?.uid ? room?.players?.[user.uid] || null : null),
     [room?.players, user?.uid],
   );
+
+  useEffect(() => {
+    if (!user?.uid || !isMember || !currentPlayer?.name) {
+      return undefined;
+    }
+
+    return setupPlayerPresence(roomCode, user.uid, currentPlayer.name);
+  }, [currentPlayer?.name, isMember, roomCode, user?.uid]);
 
   const isHost = Boolean(user?.uid && room?.hostId === user.uid);
 
@@ -80,10 +79,22 @@ export const useMultiplayerRoom = (roomCode) => {
     () =>
       Object.values(room?.players || {}).sort(
         (firstPlayer, secondPlayer) =>
+          Number(secondPlayer.score || 0) -
+            Number(firstPlayer.score || 0) ||
           Number(firstPlayer.joinedAt || 0) -
-          Number(secondPlayer.joinedAt || 0),
+            Number(secondPlayer.joinedAt || 0),
       ),
     [room?.players],
+  );
+
+  const history = useMemo(
+    () =>
+      Object.values(room?.history || {}).sort(
+        (firstEvent, secondEvent) =>
+          Number(secondEvent.createdAt || 0) -
+          Number(firstEvent.createdAt || 0),
+      ),
+    [room?.history],
   );
 
   const runAction = useCallback(async (actionName, action) => {
@@ -137,6 +148,7 @@ export const useMultiplayerRoom = (roomCode) => {
   return {
     room,
     players,
+    history,
     currentPlayer,
     isHost,
     loading,

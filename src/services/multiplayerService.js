@@ -2,6 +2,7 @@ import {
   get,
   onDisconnect,
   onValue,
+  push,
   ref,
   remove,
   runTransaction,
@@ -53,6 +54,12 @@ const getPlayerRef = (roomCode, userId) =>
     `rooms/${normalizeRoomCode(roomCode)}/players/${userId}`,
   );
 
+const getRoomHistoryRef = (roomCode) =>
+  ref(
+    realtimeDb,
+    `rooms/${normalizeRoomCode(roomCode)}/history`,
+  );
+
 const getPlayerName = (user) => user.displayName?.trim() || "Oyunçu";
 
 const createPlayer = (user, isHost = false) => ({
@@ -64,6 +71,17 @@ const createPlayer = (user, isHost = false) => ({
   joinedAt: serverTimestamp(),
   lastSeen: serverTimestamp(),
 });
+
+const createHistoryEvent = (eventRef, event) => ({
+  id: eventRef.key,
+  ...event,
+  createdAt: serverTimestamp(),
+});
+
+const appendRoomHistory = async (roomCode, event) => {
+  const eventRef = push(getRoomHistoryRef(roomCode));
+  await set(eventRef, createHistoryEvent(eventRef, event));
+};
 
 const requireUser = (user) => {
   if (!user?.uid) {
@@ -139,6 +157,7 @@ export const createRoom = async (user, customSettings = {}) => {
     for (let attempt = 0; attempt < MAX_ROOM_CODE_ATTEMPTS; attempt += 1) {
       const roomCode = generateRoomCode();
       const roomRef = getRoomRef(roomCode);
+      const historyEventRef = push(getRoomHistoryRef(roomCode));
       const room = {
         code: roomCode,
         hostId: user.uid,
@@ -147,6 +166,13 @@ export const createRoom = async (user, customSettings = {}) => {
         settings,
         players: {
           [user.uid]: createPlayer(user, true),
+        },
+        history: {
+          [historyEventRef.key]: createHistoryEvent(historyEventRef, {
+            type: "join",
+            userId: user.uid,
+            playerName: getPlayerName(user),
+          }),
         },
       };
 
@@ -213,6 +239,12 @@ export const joinRoom = async (roomCode, user) => {
       if (!result.committed) {
         throw new MultiplayerError("room-join-failed");
       }
+
+      await appendRoomHistory(normalizedCode, {
+        type: "join",
+        userId: user.uid,
+        playerName: getPlayerName(user),
+      });
     }
 
     await Promise.all([
@@ -396,6 +428,15 @@ export const changePlayerScore = async (
     const newScore = Number(scoreResult.snapshot.val() || 0);
     const targetScore = Number(room.settings?.targetScore || 100);
 
+    await appendRoomHistory(normalizedCode, {
+      type: "score",
+      userId,
+      playerName: room.players[userId].name,
+      amount,
+      previousScore: newScore - amount,
+      newScore,
+    });
+
     if (newScore >= targetScore) {
       await finishGame(normalizedCode, userId);
     }
@@ -459,7 +500,7 @@ export const restartGame = async (roomCode, userId) => {
   }
 };
 
-export const setupPlayerPresence = (roomCode, userId) => {
+export const setupPlayerPresence = (roomCode, userId, playerName = "Oyunçu") => {
   const normalizedCode = requireValidCode(roomCode);
   const onlineRef = ref(
     realtimeDb,
@@ -472,6 +513,7 @@ export const setupPlayerPresence = (roomCode, userId) => {
   const connectedRef = ref(realtimeDb, ".info/connected");
   const onlineDisconnect = onDisconnect(onlineRef);
   const lastSeenDisconnect = onDisconnect(lastSeenRef);
+  let historyDisconnect;
 
   const unsubscribe = onValue(connectedRef, async (snapshot) => {
     if (snapshot.val() !== true) {
@@ -479,8 +521,18 @@ export const setupPlayerPresence = (roomCode, userId) => {
     }
 
     try {
+      const offlineEventRef = push(getRoomHistoryRef(normalizedCode));
+      historyDisconnect = onDisconnect(offlineEventRef);
+
       await onlineDisconnect.set(false);
       await lastSeenDisconnect.set(serverTimestamp());
+      await historyDisconnect.set(
+        createHistoryEvent(offlineEventRef, {
+          type: "offline",
+          userId,
+          playerName,
+        }),
+      );
       await Promise.all([
         set(onlineRef, true),
         set(lastSeenRef, serverTimestamp()),
@@ -496,11 +548,17 @@ export const setupPlayerPresence = (roomCode, userId) => {
     Promise.all([
       onlineDisconnect.cancel(),
       lastSeenDisconnect.cancel(),
+      historyDisconnect?.cancel(),
     ])
       .then(() =>
         Promise.all([
           set(onlineRef, false),
           set(lastSeenRef, serverTimestamp()),
+          appendRoomHistory(normalizedCode, {
+            type: "offline",
+            userId,
+            playerName,
+          }),
         ]),
       )
       .catch(() => {});
@@ -600,6 +658,17 @@ export const leaveRoom = async (roomCode, userId) => {
   const normalizedCode = requireValidCode(roomCode);
 
   try {
+    const room = await getRoom(normalizedCode);
+    const player = room?.players?.[userId];
+
+    if (player) {
+      await appendRoomHistory(normalizedCode, {
+        type: "leave",
+        userId,
+        playerName: player.name,
+      });
+    }
+
     await transferHostAndLeave(normalizedCode, userId);
   } catch (error) {
     throw asMultiplayerError(error, "room-leave-failed");

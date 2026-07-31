@@ -10,6 +10,7 @@ import {
   FiUsers,
 } from "react-icons/fi";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import MultiplayerHistory from "../components/MultiplayerHistory";
 import MultiplayerPlayerCard from "../components/MultiplayerPlayerCard";
 import MultiplayerWinnerModal from "../components/MultiplayerWinnerModal";
 import { useMultiplayerRoom } from "../hooks/useMultiplayerRoom";
@@ -38,6 +39,7 @@ export default function MultiplayerRoom() {
   const {
     room,
     players,
+    history,
     currentPlayer,
     isHost,
     loading,
@@ -227,9 +229,10 @@ export default function MultiplayerRoom() {
         </div>
 
         <div className="multiplayer-players">
-          {players.map((player) => (
+          {players.map((player, index) => (
             <MultiplayerPlayerCard
               key={player.id}
+              rank={index + 1}
               player={{
                 ...player,
                 isHost: room.hostId === player.id,
@@ -241,6 +244,8 @@ export default function MultiplayerRoom() {
             />
           ))}
         </div>
+
+        <MultiplayerHistory history={history} />
       </section>
 
       {room.status === "finished" &&

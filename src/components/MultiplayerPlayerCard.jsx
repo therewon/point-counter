@@ -5,6 +5,7 @@ const SCORE_ACTIONS = [-5, -1, 1, 5];
 
 export default function MultiplayerPlayerCard({
   player,
+  rank,
   isCurrentPlayer,
   isPlaying,
   isScoreLoading,
@@ -17,6 +18,9 @@ export default function MultiplayerPlayerCard({
       className={`multiplayer-player ${isCurrentPlayer ? "is-current" : ""}`}
     >
       <div className="multiplayer-player__identity">
+        <span className="multiplayer-player__rank" aria-label={`${rank}. yer`}>
+          {rank}
+        </span>
         <span className="multiplayer-player__avatar" aria-hidden="true">
           <FiUser />
         </span>
