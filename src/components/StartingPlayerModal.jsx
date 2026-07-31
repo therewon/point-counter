@@ -1,6 +1,9 @@
 import { IoMdClose } from "react-icons/io";
 import { motion } from "framer-motion";
 
+const MotionDiv = motion.div;
+const MotionHeading = motion.h2;
+
 const StartingPlayerModal = ({
   players,
   activeIndex,
@@ -30,7 +33,7 @@ const StartingPlayerModal = ({
 
         <div className="flex flex-col gap-3">
           {players.map((player, index) => (
-            <motion.div
+            <MotionDiv
               key={player.id}
               animate={{
                 rotate: activeIndex === index ? [-3, 3, -3, 0] : 0,
@@ -44,18 +47,18 @@ const StartingPlayerModal = ({
               }`}
             >
               <h2 className="text-lg font-bold">{player.name}</h2>
-            </motion.div>
+            </MotionDiv>
           ))}
         </div>
 
         {!isRolling && startingPlayer && (
-          <motion.h2
+          <MotionHeading
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             className="text-center pt-4! max-sm:pb-4! text-3xl font-bold text-green-600"
           >
             🎉 {startingPlayer.name} starts the game!
-          </motion.h2>
+          </MotionHeading>
         )}
       </div>
     </>

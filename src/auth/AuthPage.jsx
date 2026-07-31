@@ -281,7 +281,7 @@ export default function AuthPage({ mode }) {
                 className="auth-social__button auth-social__button--apple"
                 type="button"
                 onClick={() => handleSocialSignIn("apple")}
-                disabled={isBusy}
+                disabled
                 aria-label="Apple ilə davam et"
               >
                 <FaApple aria-hidden="true" />

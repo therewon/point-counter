@@ -7,7 +7,6 @@ import AppHeader from "./components/AppHeader";
 import History from "./components/History";
 import ScoreBoard from "./components/ScoreBoard";
 import StartingPlayerModal from "./components/StartingPlayerModal";
-import Header from "./components/Header";
 import SaveGameButton from "./components/SaveGameButton";
 import SaveGameModal from "./components/SaveGameModal";
 

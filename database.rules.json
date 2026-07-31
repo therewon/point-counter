@@ -1,0 +1,91 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "rooms": {
+      "$roomCode": {
+        ".read": "auth != null",
+        ".write": "auth != null && ((!data.exists() && newData.exists() && newData.child('hostId').val() === auth.uid && newData.child('players').child(auth.uid).child('isHost').val() === true) || (data.exists() && !newData.exists() && data.child('hostId').val() === auth.uid))",
+        ".validate": "!newData.exists() || ($roomCode.matches(/^[A-HJ-NP-Z2-9]{6}$/) && newData.hasChildren(['code', 'hostId', 'status', 'createdAt', 'settings', 'players']))",
+        "code": {
+          ".validate": "newData.isString() && newData.val() === $roomCode"
+        },
+        "hostId": {
+          ".write": "auth != null && data.parent().child('hostId').val() === auth.uid && newData.isString() && newData.parent().child('players').child(newData.val()).exists()",
+          ".validate": "newData.isString() && newData.parent().child('players').child(newData.val()).exists()"
+        },
+        "status": {
+          ".write": "auth != null && data.parent().child('players').child(auth.uid).exists() && ((data.parent().child('hostId').val() === auth.uid && ((data.val() === 'waiting' && newData.val() === 'playing') || (data.val() === 'finished' && newData.val() === 'waiting'))) || (data.val() === 'playing' && newData.val() === 'finished' && data.parent().child('winnerId').exists()))",
+          ".validate": "newData.isString() && (newData.val() === 'waiting' || newData.val() === 'playing' || newData.val() === 'finished')"
+        },
+        "createdAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "startedAt": {
+          ".write": "auth != null && data.parent().child('hostId').val() === auth.uid && ((data.parent().child('status').val() === 'playing' && newData.isNumber()) || (data.parent().child('status').val() === 'finished' && !newData.exists()))",
+          ".validate": "newData.isNumber()"
+        },
+        "finishedAt": {
+          ".write": "auth != null && data.parent().child('players').child(auth.uid).exists() && ((data.parent().child('status').val() === 'finished' && data.parent().child('winnerId').exists() && newData.isNumber()) || (data.parent().child('hostId').val() === auth.uid && data.parent().child('status').val() === 'finished' && !newData.exists()))",
+          ".validate": "newData.isNumber()"
+        },
+        "winnerId": {
+          ".write": "auth != null && data.parent().child('players').child(auth.uid).exists() && ((!data.exists() && newData.val() === auth.uid && data.parent().child('status').val() === 'playing' && data.parent().child('players').child(auth.uid).child('score').val() >= data.parent().child('settings').child('targetScore').val()) || (data.parent().child('hostId').val() === auth.uid && data.parent().child('status').val() === 'finished' && !newData.exists()))",
+          ".validate": "newData.isString() && newData.parent().child('players').child(newData.val()).exists()"
+        },
+        "settings": {
+          ".validate": "newData.hasChildren(['targetScore', 'scoreStep', 'allowNegativeScore'])",
+          "targetScore": {
+            ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 100000"
+          },
+          "scoreStep": {
+            ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 1000"
+          },
+          "allowNegativeScore": {
+            ".validate": "newData.isBoolean()"
+          },
+          "$other": {
+            ".validate": false
+          }
+        },
+        "players": {
+          "$uid": {
+            ".write": "auth != null && auth.uid === $uid && ((!data.exists() && newData.exists() && data.parent().parent().child('status').val() === 'waiting' && newData.child('score').val() === 0 && newData.child('isOnline').val() === true && newData.child('isHost').val() === (data.parent().parent().child('hostId').val() === $uid)) || (data.exists() && !newData.exists()))",
+            ".validate": "!newData.exists() || newData.hasChildren(['id', 'name', 'score', 'isHost', 'isOnline', 'joinedAt', 'lastSeen'])",
+            "id": {
+              ".validate": "newData.isString() && newData.val() === $uid"
+            },
+            "name": {
+              ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 50"
+            },
+            "score": {
+              ".write": "auth != null && newData.isNumber() && ((auth.uid === $uid && data.parent().parent().parent().child('status').val() === 'playing' && (newData.val() === data.val() - 10 || newData.val() === data.val() - 1 || newData.val() === data.val() + 1 || newData.val() === data.val() + 10) && (data.parent().parent().parent().child('settings').child('allowNegativeScore').val() === true || newData.val() >= 0)) || (data.parent().parent().parent().child('hostId').val() === auth.uid && data.parent().parent().parent().child('status').val() === 'finished' && newData.val() === 0))",
+              ".validate": "newData.isNumber() && (newData.parent().parent().parent().child('settings').child('allowNegativeScore').val() === true || newData.val() >= 0)"
+            },
+            "isHost": {
+              ".write": "auth != null && auth.uid === $uid && newData.isBoolean() && newData.val() === (data.parent().parent().parent().child('hostId').val() === $uid)",
+              ".validate": "newData.isBoolean() && newData.val() === (newData.parent().parent().parent().child('hostId').val() === $uid)"
+            },
+            "isOnline": {
+              ".write": "auth != null && auth.uid === $uid && data.parent().exists() && newData.isBoolean()",
+              ".validate": "newData.isBoolean()"
+            },
+            "joinedAt": {
+              ".validate": "newData.isNumber()"
+            },
+            "lastSeen": {
+              ".write": "auth != null && auth.uid === $uid && data.parent().exists() && newData.isNumber()",
+              ".validate": "newData.isNumber()"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    }
+  }
+}
