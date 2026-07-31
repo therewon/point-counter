@@ -13,7 +13,7 @@ import { realtimeDb } from "../firebase";
 const ROOM_CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 const ROOM_CODE_LENGTH = 6;
 const ROOM_CODE_PATTERN = /^[A-HJ-NP-Z2-9]{6}$/;
-const SCORE_ACTIONS = new Set([-10, -1, 1, 10]);
+const SCORE_ACTIONS = new Set([-5, -1, 1, 5]);
 const MAX_ROOM_CODE_ATTEMPTS = 12;
 
 const errorMessages = {
